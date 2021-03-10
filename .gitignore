@@ -1,0 +1,93 @@
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Files built by Visual Studio
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.tmp
+*.tmp_proj
+*_wpftmp.csproj
+*.log
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# JustCode is a .NET coding add-in
+.JustCode
+
+# DotCover is a Code Coverage Tool
+*.dotCover
+
+# Visual Studio code coverage results
+*.coverage
+*.coveragexml
+
+# Click-Once directory
+publish/
+
+# Microsoft Azure Build Output
+*.build.csdef
+
+# Visual Studio cache files
+# files ending in .cache can be ignored
+*.[Cc]ache
+# but keep track of directories ending in .cache
+!?*.[Cc]ache/
+
+# Others
+~$*
+*~
+*.pfx
+*.publishsettings
+
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# Node.js Tools for Visual Studio
+node_modules/
+
+# Azure Stream Analytics local run output
+ASALocalRun/
+
+# MSBuild Binary and Structured Log
+*.binlog
+
+# Uncomment if you have tasks that create the project's static files in wwwroot
+#wwwroot/
