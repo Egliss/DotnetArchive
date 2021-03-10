@@ -10,7 +10,8 @@ namespace DotnetArchive
         static async Task Main(string[] args)
         {
             await Host.CreateDefaultBuilder()
-                .ConfigureLogging((host,logging) => {
+                .ConfigureLogging((host, logging) =>
+                {
                     logging.ClearProviders();
                     logging.AddSimpleConsole();
                 })
