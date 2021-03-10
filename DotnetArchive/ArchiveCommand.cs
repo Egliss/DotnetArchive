@@ -41,18 +41,10 @@ namespace DotnetArchive
                 {
                     zip.CreateEntryFromFile(item, item);
                 }
-                catch(IOException ex)
+                catch(IOException ex) when(ex.HResult == -2147024864)
                 {
-                    // Process using
-                    if(ex.HResult == -2147024864)
-                    {
-                        skipCount++;
-                        this.logger.ZLogWarning("[Skip] {0} using by other process.", item);
-                    }
-                    else
-                    {
-                        throw ex;
-                    }
+                    skipCount++;
+                    this.logger.ZLogWarning("[Skip] {0} using by other process.", item);
                 }
                 this.logger.ZLog(defaultLogLevel, item);
             }
