@@ -32,6 +32,10 @@ namespace DotnetArchive
             var options = 0 + (ignoreCase ? GlobOptions.CaseInsensitive : 0);
 
             var files = Glob.Files(Environment.CurrentDirectory, inputPattern, options).ToArray();
+            if(File.Exists(output))
+            {
+                File.Delete(output);
+            }
 
             using var zip = ZipFile.Open(output, ZipArchiveMode.Update);
             long skipCount = 0;
