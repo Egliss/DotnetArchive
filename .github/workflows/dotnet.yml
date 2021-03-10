@@ -1,0 +1,31 @@
+name: .NET
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: |
+        dotnet restore
+        dotnet tool restore
+    - name: Lint
+      run: |
+        dotnet format DotnetArchive.sln --check
+        dotnet format DotnetArchive.sln --check --fix-style warn
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - uses: actions/upload-artifact@v2
+      with:
+        name: DotnetArchiveOutput
+        path: DotnetArchive/bin/Release/*.nupkg
