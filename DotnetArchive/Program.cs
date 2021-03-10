@@ -1,12 +1,20 @@
-﻿using System;
+﻿using ConsoleAppFramework;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace DotnetArchive
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            await Host.CreateDefaultBuilder()
+                .ConfigureLogging((host,logging) => {
+                    logging.ClearProviders();
+                    logging.AddSimpleConsole();
+                })
+                .RunConsoleAppFrameworkAsync<ArchiveCommand>(args);
         }
     }
 }
