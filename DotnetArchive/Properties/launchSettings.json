@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "DotnetArchive": {
+      "commandName": "Project"
+    },
+    "Zip": {
+      "commandName": "Project",
+      "commandLineArgs": "zip -i \"*\" -h false"
+    }
+  }
+}
