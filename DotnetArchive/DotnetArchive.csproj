@@ -5,4 +5,10 @@
     <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ConsoleAppFramework" Version="3.2.0" />
+    <PackageReference Include="Glob" Version="1.1.8" />
+    <PackageReference Include="ZLogger" Version="1.4.1" />
+    <PackageReference Include="ZString" Version="2.3.1" />
+  </ItemGroup>
 </Project>
