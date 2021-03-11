@@ -1,8 +1,7 @@
-﻿using GlobExpressions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Threading.Tasks;
 using ZLogger;
 
@@ -16,32 +15,24 @@ namespace DotnetArchive.Archives
             this.logger = logger;
         }
 
-        public Task ZipAsync(string input, string pattern, string output, bool excludeHidden, bool ignoreCase, bool quiet)
+        public Task ZipAsync(string input, string pattern, string excludePattern, string output, bool excludeHidden, bool ignoreCase, bool quiet)
         {
-            // Configuration
-            var defaultLogLevel = quiet ? LogLevel.Debug : LogLevel.Information;
-            var options = 0 + (ignoreCase ? GlobOptions.CaseInsensitive : 0);
+            if(string.IsNullOrEmpty(input))
+                throw new ArgumentException(nameof(input));
 
-            var files = Glob.Files(input, pattern, options).ToArray();
             if(File.Exists(output))
-            {
                 File.Delete(output);
-            }
 
+            var defaultLogLevel = quiet ? LogLevel.Debug : LogLevel.Information;
             using var zip = ZipFile.Open(output, ZipArchiveMode.Update);
+            var files = EglGlob.Run(input, pattern, excludePattern, excludeHidden, ignoreCase);
 
             long processedCount = 0;
             long skipCount = 0;
             foreach(var item in files)
             {
                 var file = Path.Combine(input, item);
-                // hidden file
-                if(excludeHidden)
-                {
-                    var isHidden = ((int)File.GetAttributes(file)) & ((int)FileAttributes.Hidden);
-                    if(isHidden > 0)
-                        continue;
-                }
+
                 try
                 {
                     zip.CreateEntryFromFile(file, file);
