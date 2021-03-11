@@ -26,7 +26,7 @@ namespace DotnetArchive
 
             foreach(var item in files)
             {
-                var file = Path.Combine(input, item).Replace('\\','/');
+                var file = Path.Combine(input, item).Replace('\\', '/');
                 // hidden file
                 if(excludeHidden)
                 {
