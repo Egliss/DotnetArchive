@@ -82,7 +82,7 @@ namespace DotnetArchive_Test
             await archive.ZipAsync("Test", "**/*", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
-                Assert.IsTrue(zip.Entries.Any(m => m.Name == "Hide_A.txt"));
+                Assert.IsTrue(zip.Entries.Any(m => m.Name == "Hide_A.txt"), File.GetAttributes("Test/Hide_A.txt").ToString());
             }
 
             // Exclude hidden file
