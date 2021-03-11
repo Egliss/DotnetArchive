@@ -69,7 +69,6 @@ namespace DotnetArchive_Test
         [TestMethod]
         public async Task _Zipが出力される()
         {
-            File.Delete("output.zip");
             var archive = new DefaultZipArchive(logger);
             await archive.ZipAsync("./", "*", "", "output.zip", false, false, false);
 
@@ -79,7 +78,6 @@ namespace DotnetArchive_Test
         [TestMethod]
         public async Task _再帰を考慮したZip化が成功する()
         {
-            File.Delete("output.zip");
             var archive = new DefaultZipArchive(logger);
 
             await archive.ZipAsync("Test", "**/*", "", "output.zip", true, false, false);
