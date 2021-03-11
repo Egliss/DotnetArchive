@@ -1,4 +1,6 @@
 ﻿using ConsoleAppFramework;
+using DotnetArchive.Archives;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -14,6 +16,10 @@ namespace DotnetArchive
                 {
                     logging.ClearProviders();
                     logging.AddSimpleConsole();
+                })
+                .ConfigureServices(m =>
+                {
+                    m.AddSingleton<IZipArchive, DefaultZipArchive>();
                 })
                 .RunConsoleAppFrameworkAsync<ArchiveCommand>(args);
         }
