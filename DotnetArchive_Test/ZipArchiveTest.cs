@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DotnetArchive_Test
@@ -17,8 +19,11 @@ namespace DotnetArchive_Test
         {
             Directory.CreateDirectory("Test");
             // Hidden file
-            using(var s1 = File.Create("Test/A.txt")){}
-            File.SetAttributes("Test/A.txt", FileAttributes.Hidden);
+            if(File.Exists("Test/Hide_A.txt"))
+                File.SetAttributes("Test/Hide_A.txt", FileAttributes.Normal);
+
+            using(var s1 = File.Create("Test/Hide_A.txt")) { }
+            File.SetAttributes("Test/Hide_A.txt", FileAttributes.Hidden);
             // SingleFile
             Directory.CreateDirectory("Test/A");
             using var s2 = File.CreateText("Test/A/A.txt");
@@ -26,8 +31,8 @@ namespace DotnetArchive_Test
             Directory.CreateDirectory("Test/B");
             // MultiFile
             Directory.CreateDirectory("Test/C");
-            using var s3 = File.CreateText("Test/C/C_0");
-            using var s4 = File.CreateText("Test/C/C_1");
+            using var s3 = File.CreateText("Test/C/c_0.txt");
+            using var s4 = File.CreateText("Test/C/C_1.txt");
 
             var loggerFactory = LoggerFactory.Create(m => { });
             ZipArchiveTest.logger = loggerFactory.CreateLogger<DefaultZipArchive>();
@@ -40,7 +45,7 @@ namespace DotnetArchive_Test
         }
 
         [TestMethod]
-        public async Task _“ü—Í–³‚µ‚Å‰½‚à¶¬‚³‚ê‚¸—áŠO‚ª”­¶‚·‚é()
+        public async Task _å…¥åŠ›ç„¡ã—ã§ä½•ã‚‚ç”Ÿæˆã•ã‚Œãšä¾‹å¤–ãŒç™ºç”Ÿã™ã‚‹()
         {
             File.Delete("output.zip");
             var archive = new DefaultZipArchive(logger);
@@ -52,7 +57,7 @@ namespace DotnetArchive_Test
         }
 
         [TestMethod]
-        public async Task _o—Íæ–³‚µ‚Å‰½‚à¶¬‚³‚ê‚¸—áŠO‚ª”­¶‚·‚é()
+        public async Task _å‡ºåŠ›å…ˆç„¡ã—ã§ä½•ã‚‚ç”Ÿæˆã•ã‚Œãšä¾‹å¤–ãŒç™ºç”Ÿã™ã‚‹()
         {
             var archive = new DefaultZipArchive(logger);
             await Assert.ThrowsExceptionAsync<ArgumentException>(
@@ -60,13 +65,51 @@ namespace DotnetArchive_Test
         }
 
         [TestMethod]
-        public async Task _Zip‚ªo—Í‚³‚ê‚é()
+        public async Task _ZipãŒå‡ºåŠ›ã•ã‚Œã‚‹()
         {
             File.Delete("output.zip");
             var archive = new DefaultZipArchive(logger);
             await archive.ZipAsync("./", "*", "output.zip", false, false, false);
 
             Assert.IsTrue(File.Exists("output.zip"));
+        }
+
+        [TestMethod]
+        public async Task _éš ã—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è€ƒæ…®ã—ãŸZipãŒå‡ºåŠ›ã•ã‚Œã‚‹()
+        {
+            var archive = new DefaultZipArchive(logger);
+            // No exclude hidden file
+            await archive.ZipAsync("Test", "**/*", "output.zip", false, false, false);
+            using(var zip = ZipFile.OpenRead("output.zip"))
+            {
+                Assert.IsTrue(zip.Entries.Any(m => m.Name == "Hide_A.txt"));
+            }
+
+            // Exclude hidden file
+            await archive.ZipAsync("Test", "**/*", "output.zip", true, false, false);
+            using(var zip = ZipFile.OpenRead("output.zip"))
+            {
+                Assert.IsFalse(zip.Entries.Any(m => m.Name == "Hide_A.txt"));
+            }
+        }
+
+        [TestMethod]
+        public async Task _å¤§æ–‡å­—å°æ–‡å­—ã‚’è€ƒæ…®ã—ãŸZipãŒå‡ºåŠ›ã•ã‚Œã‚‹()
+        {
+            var archive = new DefaultZipArchive(logger);
+            // No exclude hidden file
+            await archive.ZipAsync("Test", "**/c*", "output.zip", false, false, false);
+            using(var zip = ZipFile.OpenRead("output.zip"))
+            {
+                Assert.IsTrue(zip.Entries.Count == 1);
+            }
+
+            // Exclude hidden file
+            await archive.ZipAsync("Test", "**/c*", "output.zip", true, true, false);
+            using(var zip = ZipFile.OpenRead("output.zip"))
+            {
+                Assert.IsTrue(zip.Entries.Count == 2);
+            }
         }
     }
 }
