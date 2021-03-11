@@ -13,6 +13,7 @@ namespace DotnetArchive
         public ArchiveCommand(ILogger<ArchiveCommand> logger, IZipArchive archive)
         {
             this.logger = logger;
+            this.archive = archive;
         }
 
         [Command("zip", "generate zip archive.")]
