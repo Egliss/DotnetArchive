@@ -19,11 +19,11 @@ namespace DotnetArchive_Test
         {
             Directory.CreateDirectory("Test");
             // Hidden file
-            if(File.Exists("Test/Hide_A.txt"))
-                File.SetAttributes("Test/Hide_A.txt", FileAttributes.Normal);
+            if(File.Exists("Test/.Hide_A.txt"))
+                File.SetAttributes("Test/.Hide_A.txt", FileAttributes.Normal);
 
-            using(var s1 = File.Create("Test/Hide_A.txt")) { }
-            File.SetAttributes("Test/Hide_A.txt", FileAttributes.Hidden);
+            using(var s1 = File.Create("Test/.Hide_A.txt")) { }
+            File.SetAttributes("Test/.Hide_A.txt", FileAttributes.Hidden | FileAttributes.Normal);
             // SingleFile
             Directory.CreateDirectory("Test/A");
             using var s2 = File.CreateText("Test/A/A.txt");
@@ -82,14 +82,14 @@ namespace DotnetArchive_Test
             await archive.ZipAsync("Test", "**/*", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
-                Assert.IsTrue(zip.Entries.Any(m => m.Name == "Hide_A.txt"), File.GetAttributes("Test/Hide_A.txt").ToString());
+                Assert.IsTrue(zip.Entries.Any(m => m.Name == ".Hide_A.txt"));
             }
 
             // Exclude hidden file
             await archive.ZipAsync("Test", "**/*", "output.zip", true, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
-                Assert.IsFalse(zip.Entries.Any(m => m.Name == "Hide_A.txt"));
+                Assert.IsFalse(zip.Entries.Any(m => m.Name == ".Hide_A.txt"));
             }
         }
 
