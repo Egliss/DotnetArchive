@@ -1,12 +1,7 @@
 name: .NET
 
 on:
-  pull_request:
-    tags-ignore:
-      - '*'
   push:
-    tags-ignore:
-      - '*'
 
 jobs:
   build:
