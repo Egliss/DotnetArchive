@@ -17,20 +17,20 @@ namespace DotnetArchive
             var hideDirectories = Glob.Directories(input, pattern, options)
                 .Select(m => Path.Combine(input, m))
                 .Where(m => (new DirectoryInfo(m).Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
-                .Select(m => new Regex(m.Replace("\\", "\\\\") + "*"))
+                .Select(m => new Regex(m.Replace('\\', '/') + "*"))
                 .ToArray();
             var excludeFiles = Glob
                 .Files(input, excludePattern, options)
-                .Select(m => Path.Combine(input, m))
+                .Select(m => Path.Combine(input, m).Replace('\\', '/'))
                 .ToHashSet();
 
             foreach(var item in files)
             {
-                var file = Path.Combine(input, item);
+                var file = Path.Combine(input, item).Replace('\\','/');
                 // hidden file
                 if(excludeHidden)
                 {
-                    var directory = Path.GetDirectoryName(file);
+                    var directory = Path.GetDirectoryName(file).Replace('\\', '/');
                     var directoryAttribute = new DirectoryInfo(directory).Attributes;
                     var fileAttribute = File.GetAttributes(file);
 
