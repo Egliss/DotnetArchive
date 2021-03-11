@@ -34,16 +34,17 @@ namespace DotnetArchive.Archives
             long skipCount = 0;
             foreach(var item in files)
             {
+                var file = Path.Combine(input, item);
                 // hidden file
                 if(excludeHidden)
                 {
-                    var isHidden = ((int)File.GetAttributes(item)) & ((int)FileAttributes.Hidden);
+                    var isHidden = ((int)File.GetAttributes(file)) & ((int)FileAttributes.Hidden);
                     if(isHidden > 0)
                         continue;
                 }
                 try
                 {
-                    zip.CreateEntryFromFile(item, item);
+                    zip.CreateEntryFromFile(file, file);
                 }
                 catch(IOException ex) when(ex.HResult == -2147024864)
                 {
