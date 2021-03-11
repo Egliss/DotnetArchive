@@ -24,6 +24,7 @@ namespace DotnetArchive_Test
 
             using(var s1 = File.Create("Test/.Hide_A.txt")) { }
             File.SetAttributes("Test/.Hide_A.txt", FileAttributes.Hidden | FileAttributes.Normal);
+
             // SingleFile
             Directory.CreateDirectory("Test/A");
             using var s2 = File.CreateText("Test/A/A.txt");
@@ -33,6 +34,10 @@ namespace DotnetArchive_Test
             Directory.CreateDirectory("Test/C");
             using var s3 = File.CreateText("Test/C/c_0.txt");
             using var s4 = File.CreateText("Test/C/C_1.txt");
+
+            Directory.CreateDirectory("Test/C/D");
+            using var s5 = File.CreateText("Test/C/D/D_1.txt");
+            using var s6 = File.CreateText("Test/C/D/D_2.txt");
 
             var loggerFactory = LoggerFactory.Create(m => { });
             ZipArchiveTest.logger = loggerFactory.CreateLogger<DefaultZipArchive>();
@@ -45,15 +50,12 @@ namespace DotnetArchive_Test
         }
 
         [TestMethod]
-        public async Task _入力無しで何も生成されず例外が発生する()
+        public async Task _入力無しで例外が発生する()
         {
-            File.Delete("output.zip");
             var archive = new DefaultZipArchive(logger);
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await archive.ZipAsync("", "", "output.zip", false, false, false));
-
-            Assert.IsFalse(File.Exists("output.zip"));
+                async () => await archive.ZipAsync("", "", "", "output.zip", false, false, false));
         }
 
         [TestMethod]
@@ -61,17 +63,28 @@ namespace DotnetArchive_Test
         {
             var archive = new DefaultZipArchive(logger);
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await archive.ZipAsync("./", "*", "", false, false, false));
+                async () => await archive.ZipAsync("./", "*", "", "", false, false, false));
         }
 
         [TestMethod]
         public async Task _Zipが出力される()
         {
-            File.Delete("output.zip");
             var archive = new DefaultZipArchive(logger);
-            await archive.ZipAsync("./", "*", "output.zip", false, false, false);
+            await archive.ZipAsync("./", "*", "", "output.zip", false, false, false);
 
             Assert.IsTrue(File.Exists("output.zip"));
+        }
+
+        [TestMethod]
+        public async Task _再帰を考慮したZip化が成功する()
+        {
+            var archive = new DefaultZipArchive(logger);
+
+            await archive.ZipAsync("Test", "**/*", "", "output.zip", true, false, false);
+            using(var zip = ZipFile.OpenRead("output.zip"))
+            {
+                Assert.IsTrue(zip.Entries.Count == 5, zip.Entries.Count.ToString());
+            }
         }
 
         [TestMethod]
@@ -79,14 +92,14 @@ namespace DotnetArchive_Test
         {
             var archive = new DefaultZipArchive(logger);
             // No exclude hidden file
-            await archive.ZipAsync("Test", "**/*", "output.zip", false, false, false);
+            await archive.ZipAsync("Test", "**/*", "", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsTrue(zip.Entries.Any(m => m.Name == ".Hide_A.txt"));
             }
 
             // Exclude hidden file
-            await archive.ZipAsync("Test", "**/*", "output.zip", true, false, false);
+            await archive.ZipAsync("Test", "**/*", "", "output.zip", true, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsFalse(zip.Entries.Any(m => m.Name == ".Hide_A.txt"));
@@ -98,17 +111,29 @@ namespace DotnetArchive_Test
         {
             var archive = new DefaultZipArchive(logger);
             // No exclude hidden file
-            await archive.ZipAsync("Test", "**/c*", "output.zip", false, false, false);
+            await archive.ZipAsync("Test", "**/c*", "", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsTrue(zip.Entries.Count == 1);
             }
 
             // Exclude hidden file
-            await archive.ZipAsync("Test", "**/c*", "output.zip", true, true, false);
+            await archive.ZipAsync("Test", "**/c*", "", "output.zip", true, true, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsTrue(zip.Entries.Count == 2);
+            }
+        }
+
+        [TestMethod]
+        public async Task _GlobでIgnoreが指定できる()
+        {
+            var archive = new DefaultZipArchive(logger);
+            // No exclude hidden file
+            await archive.ZipAsync("Test", "**/*", "*/D/**", "output.zip", false, false, false);
+            using(var zip = ZipFile.OpenRead("output.zip"))
+            {
+                Assert.IsTrue(zip.Entries.Count == 4);
             }
         }
     }

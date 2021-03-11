@@ -7,6 +7,7 @@ namespace DotnetArchive.Archives
         public Task ZipAsync(
             string input,
             string pattern,
+            string excludePattern,
             string output,
             bool excludeHidden,
             bool ignoreCase,
