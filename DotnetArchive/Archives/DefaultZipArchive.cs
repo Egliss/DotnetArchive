@@ -41,7 +41,7 @@ namespace DotnetArchive.Archives
                     this.logger.ZLogWarning("[Skip] {0} using by other process.", item);
                     continue;
                 }
-                zip.CreateEntryFromFile(file, file);
+                zip.CreateEntryFromFile(file, item);
                 processedCount++;
                 this.logger.ZLog(defaultLogLevel, item);
             }
