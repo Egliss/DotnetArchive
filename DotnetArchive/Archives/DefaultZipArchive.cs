@@ -26,25 +26,29 @@ namespace DotnetArchive.Archives
                 File.Delete(output);
 
             var defaultLogLevel = quiet ? LogLevel.Debug : LogLevel.Information;
-            using var zip = ZipFile.Open(output, ZipArchiveMode.Update);
-            var files = EglGlob.Run(input, pattern, excludePattern, excludeHidden, ignoreCase);
 
+            var tmpFilePath = Path.Combine(Path.GetTempPath(), "tmp.zip");
             long processedCount = 0;
             long skipCount = 0;
-            foreach(var item in files)
+            using var temporaryFile = DisposableFile.OpenOrCreate(tmpFilePath, true);
+            using(var zip = ZipFile.Open(tmpFilePath, ZipArchiveMode.Update))
             {
-                var file = Path.Combine(input, item);
-                var ee = Path.GetRelativePath(file, output);
-                if(Path.GetRelativePath(file, output) == ".")
+                var files = EglGlob.Run(input, pattern, excludePattern, excludeHidden, ignoreCase);
+                foreach(var item in files)
                 {
-                    skipCount++;
-                    this.logger.ZLogWarning("[Skip] {0} using by other process.", item);
-                    continue;
+                    var file = Path.Combine(input, item);
+                    if(Path.GetRelativePath(file, output) == ".")
+                    {
+                        skipCount++;
+                        this.logger.ZLogWarning("[Skip] {0} using by other process.", item);
+                        continue;
+                    }
+                    zip.CreateEntryFromFile(file, item);
+                    processedCount++;
+                    this.logger.ZLog(defaultLogLevel, item);
                 }
-                zip.CreateEntryFromFile(file, item);
-                processedCount++;
-                this.logger.ZLog(defaultLogLevel, item);
             }
+            File.Move(tmpFilePath, output);
 
             this.logger.ZLog(defaultLogLevel, " ");
             this.logger.ZLog(defaultLogLevel, "All file archived.");
