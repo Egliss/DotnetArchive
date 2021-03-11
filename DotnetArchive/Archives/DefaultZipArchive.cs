@@ -34,16 +34,14 @@ namespace DotnetArchive.Archives
             foreach(var item in files)
             {
                 var file = Path.Combine(input, item);
-
-                try
-                {
-                    zip.CreateEntryFromFile(file, file);
-                }
-                catch(IOException ex) when(ex.HResult == -2147024864)
+                var ee = Path.GetRelativePath(file, output);
+                if(Path.GetRelativePath(file, output) == ".")
                 {
                     skipCount++;
                     this.logger.ZLogWarning("[Skip] {0} using by other process.", item);
+                    continue;
                 }
+                zip.CreateEntryFromFile(file, file);
                 processedCount++;
                 this.logger.ZLog(defaultLogLevel, item);
             }
