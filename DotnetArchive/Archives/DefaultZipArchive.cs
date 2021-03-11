@@ -19,6 +19,8 @@ namespace DotnetArchive.Archives
         {
             if(string.IsNullOrEmpty(input))
                 throw new ArgumentException(nameof(input));
+            if(string.IsNullOrEmpty(output))
+                throw new ArgumentException(nameof(input));
 
             if(File.Exists(output))
                 File.Delete(output);
