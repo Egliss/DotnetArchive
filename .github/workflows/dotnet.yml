@@ -28,12 +28,14 @@ jobs:
       run: |
         dotnet format DotnetArchive.sln --check
         dotnet format DotnetArchive.sln --check --fix-style warn
-    - name: Build Debug
-      run: dotnet build --no-restore -c Debug
-    - name: Build Release
-      run: dotnet build --no-restore -c Release
+    - name: Build
+      run: |
+        dotnet build --no-restore -c Debug
+        dotnet build --no-restore -c Release
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: |
+        dotnet test --no-build --verbosity normal --framework netcoreapp3.1
+        dotnet test --no-build --verbosity normal --framework net5.0
     - name: Pack
       run: dotnet pack --no-restore -c Release
     - uses: actions/upload-artifact@v2
