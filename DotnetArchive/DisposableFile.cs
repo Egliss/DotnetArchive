@@ -50,8 +50,13 @@ namespace DotnetArchive
 
         public void Dispose()
         {
+            if(this.allowNotFound && File.Exists(this.fullFilePath) == false)
+                return;
+
             if(File.Exists(this.fullFilePath))
                 File.Delete(this.fullFilePath);
+            // File already disposed
+            else throw new FileNotFoundException(this.fullFilePath);
         }
     }
 }
