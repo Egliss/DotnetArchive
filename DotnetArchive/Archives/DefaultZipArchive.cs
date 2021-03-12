@@ -29,7 +29,6 @@ namespace DotnetArchive.Archives
 
             var tmpFilePath = Path.Combine(Path.GetTempPath(), "tmp.zip");
             long processedCount = 0;
-            long skipCount = 0;
             using var temporaryFile = DisposableFile.OpenOrCreate(tmpFilePath, true);
             using(var zip = ZipFile.Open(tmpFilePath, ZipArchiveMode.Update))
             {
@@ -37,12 +36,6 @@ namespace DotnetArchive.Archives
                 foreach(var item in files)
                 {
                     var file = Path.Combine(input, item);
-                    if(Path.GetRelativePath(file, output) == ".")
-                    {
-                        skipCount++;
-                        this.logger.ZLogWarning("[Skip] {0} using by other process.", item);
-                        continue;
-                    }
                     zip.CreateEntryFromFile(file, item);
                     processedCount++;
                     this.logger.ZLog(defaultLogLevel, item);
@@ -52,7 +45,7 @@ namespace DotnetArchive.Archives
 
             this.logger.ZLog(defaultLogLevel, " ");
             this.logger.ZLog(defaultLogLevel, "All file archived.");
-            this.logger.ZLog(defaultLogLevel, "Processed: {0} Skip: {1}", processedCount, skipCount);
+            this.logger.ZLog(defaultLogLevel, "Processed: {0} Skip: {1}", processedCount);
             return Task.CompletedTask;
 
         }
