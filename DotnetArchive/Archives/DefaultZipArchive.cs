@@ -45,7 +45,7 @@ namespace DotnetArchive.Archives
 
             this.logger.ZLog(defaultLogLevel, " ");
             this.logger.ZLog(defaultLogLevel, "All file archived.");
-            this.logger.ZLog(defaultLogLevel, "Processed: {0} Skip: {1}", processedCount);
+            this.logger.ZLog(defaultLogLevel, "Processed: {0}", processedCount);
             return Task.CompletedTask;
 
         }
