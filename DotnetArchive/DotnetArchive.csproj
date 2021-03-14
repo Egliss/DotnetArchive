@@ -6,7 +6,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>archive</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <Version>0.1.0</Version>
+    <Version>0.1.8-alpha</Version>
     <Authors>Egliss</Authors>
     <Company />
     <Description>DotnetArchive is dotnet local tool archiver.</Description>
@@ -14,8 +14,8 @@
     <PackageProjectUrl>https://github.com/Egliss/DotnetArchive</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Egliss/DotnetArchive</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>
-    <AssemblyVersion>0.0.1.0</AssemblyVersion>
-    <FileVersion>0.0.1.0</FileVersion>
+    <AssemblyVersion>0.0.1.8</AssemblyVersion>
+    <FileVersion>0.0.1.8</FileVersion>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
 
