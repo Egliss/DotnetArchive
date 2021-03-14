@@ -11,7 +11,7 @@
 
 ## 概要
 
-`DotnetArchive`はdotnetがインストールされている環境でファイルのアーカイブ化を行う`dotnet tool`です。
+`DotnetArchive`はdotnetがインストールされている環境でファイルのアーカイブ化を行う`dotnet tool`です。  
 以下のプラットフォームに対応します。
 
 + Windows 
@@ -19,8 +19,7 @@
 + Linux
 
 ## インストール
-https://www.nuget.org/packages/DotnetArchive/ にて配布しています。
-
+[NuGet](https://www.nuget.org/packages/DotnetArchive/) にて配布しています。  
 コマンドラインで以下のコマンドを実行して下さい。
 ```sh
 dotnet tool install --global DotnetArchive --version {バージョン}-alpha
@@ -33,7 +32,7 @@ dotnet tool install --global DotnetArchive --version {バージョン}-alpha
 
 ## 使い方
 `DotnetArchive`は`archive`コマンドを提供します。  
-コマンドは[https://github.com/Cysharp/ConsoleAppFramework](ConsoleAppFramework)を利用して実装されています。  
+コマンドは[ConsoleAppFramework](https://github.com/Cysharp/ConsoleAppFramework)を利用して実装されています。  
 
 ```sh
 $dotnet archive
