@@ -9,12 +9,12 @@ namespace DotnetArchive
     public class ArchiveCommand : ConsoleAppBase
     {
         private readonly ILogger<ArchiveCommand> logger;
-        private readonly IZipArchive archive;
+        private readonly IZipArchiveProcessor processor;
 
-        public ArchiveCommand(ILogger<ArchiveCommand> logger, IZipArchive archive)
+        public ArchiveCommand(ILogger<ArchiveCommand> logger, IZipArchiveProcessor processor)
         {
             this.logger = logger;
-            this.archive = archive;
+            this.processor = processor;
         }
 
         [Command("zip", "generate zip archive.")]
@@ -28,15 +28,18 @@ namespace DotnetArchive
             [Option("q", "quiet infomation message")] bool quiet = false
             )
         {
-            this.logger.LogInformation(ZString.Format("-i: {0}", input));
-            this.logger.LogInformation(ZString.Format("-p: {0}", pattern));
-            this.logger.LogInformation(ZString.Format("-e: {0}", excludePattern));
-            this.logger.LogInformation(ZString.Format("-o: {0}", output));
-            this.logger.LogInformation(ZString.Format("-h: {0}", excludeHidden));
-            this.logger.LogInformation(ZString.Format("-c: {0}", ignoreCase));
-            this.logger.LogInformation(ZString.Format("-q: {0}", quiet));
+            if(quiet == false)
+            {
+                this.logger.LogInformation(ZString.Format("-i: {0}", input));
+                this.logger.LogInformation(ZString.Format("-p: {0}", pattern));
+                this.logger.LogInformation(ZString.Format("-e: {0}", excludePattern));
+                this.logger.LogInformation(ZString.Format("-o: {0}", output));
+                this.logger.LogInformation(ZString.Format("-h: {0}", excludeHidden));
+                this.logger.LogInformation(ZString.Format("-c: {0}", ignoreCase));
+                this.logger.LogInformation(ZString.Format("-q: {0}", quiet));
+            }
 
-            await this.archive.ZipAsync(input, pattern, excludePattern, output, excludeHidden, ignoreCase, quiet);
+            await this.processor.ProcessAsync(input, pattern, excludePattern, output, excludeHidden, ignoreCase, quiet);
         }
     }
 }

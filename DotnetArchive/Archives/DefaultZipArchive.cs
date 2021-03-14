@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
@@ -7,47 +8,49 @@ using ZLogger;
 
 namespace DotnetArchive.Archives
 {
-    public class DefaultZipArchive : IZipArchive
+    public class DefaultZipArchiver : IZipArchiver
     {
-        private readonly ILogger<DefaultZipArchive> logger;
-        public DefaultZipArchive(ILogger<DefaultZipArchive> logger)
+        private readonly ILogger<DefaultZipArchiver> logger;
+        public DefaultZipArchiver(ILogger<DefaultZipArchiver> logger)
         {
             this.logger = logger;
         }
 
-        public Task ZipAsync(string input, string pattern, string excludePattern, string output, bool excludeHidden, bool ignoreCase, bool quiet)
+        public DisposableFile Zip(string inputRootPath, IEnumerable<string> files, ILogger logger, bool quiet)
         {
-            if(string.IsNullOrEmpty(input))
-                throw new ArgumentException(nameof(input));
-            if(string.IsNullOrEmpty(output))
-                throw new ArgumentException(nameof(input));
-
-            if(File.Exists(output))
-                File.Delete(output);
+            if(string.IsNullOrEmpty(inputRootPath))
+                throw new ArgumentException(nameof(inputRootPath));
+            if(Directory.Exists(inputRootPath) == false)
+                throw new DirectoryNotFoundException(inputRootPath);
+            if(files == null)
+                throw new ArgumentNullException(nameof(files));
 
             var defaultLogLevel = quiet ? LogLevel.Debug : LogLevel.Information;
-
             var tmpFilePath = Path.Combine(Path.GetTempPath(), "tmp.zip");
+            var temporaryFile = DisposableFile.OpenOrCreate(tmpFilePath, true);
             long processedCount = 0;
-            using var temporaryFile = DisposableFile.OpenOrCreate(tmpFilePath, true);
+
             using(var zip = ZipFile.Open(tmpFilePath, ZipArchiveMode.Update))
             {
-                var files = EglGlob.Run(input, pattern, excludePattern, excludeHidden, ignoreCase);
                 foreach(var item in files)
                 {
-                    var file = Path.Combine(input, item);
+                    var file = Path.Combine(inputRootPath, item);
                     zip.CreateEntryFromFile(file, item);
                     processedCount++;
                     this.logger.ZLog(defaultLogLevel, item);
                 }
             }
-            File.Move(tmpFilePath, output);
-
             this.logger.ZLog(defaultLogLevel, " ");
             this.logger.ZLog(defaultLogLevel, "All file archived.");
             this.logger.ZLog(defaultLogLevel, "Processed: {0}", processedCount);
-            return Task.CompletedTask;
 
+            return temporaryFile;
+        }
+        public Task<DisposableFile> ZipAsync(string inputRootPath, IEnumerable<string> files, ILogger logger, bool quiet)
+        {
+            logger.LogWarning("ZipAsync() not implemented. use syncrhonized Zip()");
+
+            return Task.FromResult(this.Zip(inputRootPath, files, logger, quiet));
         }
     }
 }
