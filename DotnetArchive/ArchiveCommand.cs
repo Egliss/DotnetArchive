@@ -1,4 +1,4 @@
-﻿using ConsoleAppFramework;
+using ConsoleAppFramework;
 using Cysharp.Text;
 using DotnetArchive.Archives;
 using Microsoft.Extensions.Logging;
@@ -9,12 +9,14 @@ namespace DotnetArchive
     public class ArchiveCommand : ConsoleAppBase
     {
         private readonly ILogger<ArchiveCommand> logger;
-        private readonly IZipArchive archive;
+        private readonly IZipArchiver archiver;
+        private readonly IZipArchiveProcessor processor;
 
-        public ArchiveCommand(ILogger<ArchiveCommand> logger, IZipArchive archive)
+        public ArchiveCommand(ILogger<ArchiveCommand> logger, IZipArchiver archive, IZipArchiveProcessor processor)
         {
             this.logger = logger;
-            this.archive = archive;
+            this.archiver = archive;
+            this.processor = processor;
         }
 
         [Command("zip", "generate zip archive.")]
@@ -36,7 +38,7 @@ namespace DotnetArchive
             this.logger.LogInformation(ZString.Format("-c: {0}", ignoreCase));
             this.logger.LogInformation(ZString.Format("-q: {0}", quiet));
 
-            await this.archive.ZipAsync(input, pattern, excludePattern, output, excludeHidden, ignoreCase, quiet);
+            await this.processor.ProcessAsync(this.archiver, input, pattern, excludePattern, output, excludeHidden, ignoreCase, quiet);
         }
     }
 }
