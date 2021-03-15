@@ -21,9 +21,9 @@ namespace DotnetArchive
         public async Task Zip(
             [Option("i", "input file or directory")] string input,
             [Option("p", "input directory based glob pattern")] string pattern = "*",
-            [Option("e", "exclude input directory based glob pattern")] string excludePattern = "*",
+            [Option("e", "exclude input directory based glob pattern")] string excludePattern = "",
             [Option("o", "output zip file with extension")] string output = "output.zip",
-            [Option("h", "exclude hidden file")] bool excludeHidden = true,
+            [Option("h", "exclude hidden file")] bool excludeHidden = false,
             [Option("c", "ignore case")] bool ignoreCase = true,
             [Option("q", "quiet infomation message")] bool quiet = false
             )
