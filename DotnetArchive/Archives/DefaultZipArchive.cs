@@ -8,7 +8,7 @@ using ZLogger;
 
 namespace DotnetArchive.Archives
 {
-    public class DefaultZipArchiver : IZipArchiver
+    public class DefaultZipArchiver : IArchiver
     {
         private readonly ILogger<DefaultZipArchiver> logger;
         public DefaultZipArchiver(ILogger<DefaultZipArchiver> logger)

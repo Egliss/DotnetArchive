@@ -9,8 +9,8 @@ namespace DotnetArchive.Archives
     public class DefaultArchiveProcessor : IArchiveProcessor
     {
         private readonly ILogger<DefaultArchiveProcessor> logger;
-        private readonly IZipArchiver archiver;
-        public DefaultArchiveProcessor(IZipArchiver archiver, ILogger<DefaultArchiveProcessor> logger)
+        private readonly IArchiver archiver;
+        public DefaultArchiveProcessor(IArchiver archiver, ILogger<DefaultArchiveProcessor> logger)
         {
             this.logger = logger;
             this.archiver = archiver;
