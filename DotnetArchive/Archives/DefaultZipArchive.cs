@@ -52,5 +52,15 @@ namespace DotnetArchive.Archives
 
             return Task.FromResult(this.Archive(inputRootPath, files, logger, quiet));
         }
+
+        public void UnArchive(string archiveFilePath, string outputDirectory, ILogger logger, bool quiet)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UnArchiveAsync(string archiveFilePath, string outputDirectory, ILogger logger, bool quiet)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
