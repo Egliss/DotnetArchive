@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DotnetArchive.Archives
 {
-    public class DefaultZipArchiveProcessor : IZipArchiveProcessor
+    public class DefaultArchiveProcessor : IArchiveProcessor
     {
-        private readonly ILogger<DefaultZipArchiveProcessor> logger;
+        private readonly ILogger<DefaultArchiveProcessor> logger;
         private readonly IZipArchiver archiver;
-        public DefaultZipArchiveProcessor(IZipArchiver archiver, ILogger<DefaultZipArchiveProcessor> logger)
+        public DefaultArchiveProcessor(IZipArchiver archiver, ILogger<DefaultArchiveProcessor> logger)
         {
             this.logger = logger;
             this.archiver = archiver;

@@ -9,9 +9,9 @@ namespace DotnetArchive
     public class ArchiveCommand : ConsoleAppBase
     {
         private readonly ILogger<ArchiveCommand> logger;
-        private readonly IZipArchiveProcessor processor;
+        private readonly IArchiveProcessor processor;
 
-        public ArchiveCommand(ILogger<ArchiveCommand> logger, IZipArchiveProcessor processor)
+        public ArchiveCommand(ILogger<ArchiveCommand> logger, IArchiveProcessor processor)
         {
             this.logger = logger;
             this.processor = processor;

@@ -20,7 +20,7 @@ namespace DotnetArchive
                 .ConfigureServices(m =>
                 {
                     m.AddSingleton<IZipArchiver, DefaultZipArchiver>();
-                    m.AddSingleton<IZipArchiveProcessor, DefaultZipArchiveProcessor>();
+                    m.AddSingleton<IArchiveProcessor, DefaultArchiveProcessor>();
                 })
                 .RunConsoleAppFrameworkAsync<ArchiveCommand>(args);
         }
