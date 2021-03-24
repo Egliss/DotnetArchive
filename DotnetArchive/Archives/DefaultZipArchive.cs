@@ -8,7 +8,7 @@ using ZLogger;
 
 namespace DotnetArchive.Archives
 {
-    public class DefaultZipArchiver : IZipArchiver
+    public class DefaultZipArchiver : IArchiver
     {
         private readonly ILogger<DefaultZipArchiver> logger;
         public DefaultZipArchiver(ILogger<DefaultZipArchiver> logger)
@@ -16,7 +16,7 @@ namespace DotnetArchive.Archives
             this.logger = logger;
         }
 
-        public DisposableFile Zip(string inputRootPath, IEnumerable<string> files, ILogger logger, bool quiet)
+        public DisposableFile Archive(string inputRootPath, IEnumerable<string> files, ILogger logger, bool quiet)
         {
             if(string.IsNullOrEmpty(inputRootPath))
                 throw new ArgumentException(nameof(inputRootPath));
@@ -46,11 +46,21 @@ namespace DotnetArchive.Archives
 
             return temporaryFile;
         }
-        public Task<DisposableFile> ZipAsync(string inputRootPath, IEnumerable<string> files, ILogger logger, bool quiet)
+        public Task<DisposableFile> ArchiveAsync(string inputRootPath, IEnumerable<string> files, ILogger logger, bool quiet)
         {
             logger.LogWarning("ZipAsync() not implemented. use syncrhonized Zip()");
 
-            return Task.FromResult(this.Zip(inputRootPath, files, logger, quiet));
+            return Task.FromResult(this.Archive(inputRootPath, files, logger, quiet));
+        }
+
+        public void UnArchive(string archiveFilePath, string outputDirectory, ILogger logger, bool quiet)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UnArchiveAsync(string archiveFilePath, string outputDirectory, ILogger logger, bool quiet)
+        {
+            throw new NotImplementedException();
         }
     }
 }

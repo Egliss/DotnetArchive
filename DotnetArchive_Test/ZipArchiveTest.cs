@@ -13,7 +13,7 @@ namespace DotnetArchive_Test
     public class ZipArchiveTest
     {
         private static ILogger<DefaultZipArchiver> archiveLog { get; set; }
-        private static ILogger<DefaultZipArchiveProcessor> processorLog { get; set; }
+        private static ILogger<DefaultArchiveProcessor> processorLog { get; set; }
 
         [TestInitialize]
         public void Initialize()
@@ -42,7 +42,7 @@ namespace DotnetArchive_Test
 
             var loggerFactory = LoggerFactory.Create(m => { });
             ZipArchiveTest.archiveLog = loggerFactory.CreateLogger<DefaultZipArchiver>();
-            ZipArchiveTest.processorLog = loggerFactory.CreateLogger<DefaultZipArchiveProcessor>();
+            ZipArchiveTest.processorLog = loggerFactory.CreateLogger<DefaultArchiveProcessor>();
         }
 
         [TestCleanup]
@@ -55,7 +55,7 @@ namespace DotnetArchive_Test
         public async Task _入力無しで例外が発生する()
         {
             var archiver = new DefaultZipArchiver(archiveLog);
-            var archive = new DefaultZipArchiveProcessor(archiver, processorLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(
                 async () => await archive.ProcessAsync("", "", "", "output.zip", false, false, false));
@@ -65,7 +65,7 @@ namespace DotnetArchive_Test
         public async Task _出力先無しで何も生成されず例外が発生する()
         {
             var archiver = new DefaultZipArchiver(archiveLog);
-            var archive = new DefaultZipArchiveProcessor(archiver, processorLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(
                 async () => await archive.ProcessAsync("./", "*", "", "", false, false, false));
@@ -75,7 +75,7 @@ namespace DotnetArchive_Test
         public async Task _Zipが出力される()
         {
             var archiver = new DefaultZipArchiver(archiveLog);
-            var archive = new DefaultZipArchiveProcessor(archiver, processorLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
 
             await archive.ProcessAsync("./", "*", "", "output.zip", false, false, false);
 
@@ -86,7 +86,7 @@ namespace DotnetArchive_Test
         public async Task _再帰を考慮したZip化が成功する()
         {
             var archiver = new DefaultZipArchiver(archiveLog);
-            var archive = new DefaultZipArchiveProcessor(archiver, processorLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
 
             await archive.ProcessAsync("Test", "**/*", "", "output.zip", true, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
@@ -99,7 +99,7 @@ namespace DotnetArchive_Test
         public async Task _隠しファイルを考慮したZipが出力される()
         {
             var archiver = new DefaultZipArchiver(archiveLog);
-            var archive = new DefaultZipArchiveProcessor(archiver, processorLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
             // No exclude hidden file
             await archive.ProcessAsync("Test", "**/*", "", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
@@ -119,7 +119,7 @@ namespace DotnetArchive_Test
         public async Task _大文字小文字を考慮したZipが出力される()
         {
             var archiver = new DefaultZipArchiver(archiveLog);
-            var archive = new DefaultZipArchiveProcessor(archiver, processorLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
             // No exclude hidden file
             await archive.ProcessAsync("Test", "**/c*", "", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
@@ -139,7 +139,7 @@ namespace DotnetArchive_Test
         public async Task _GlobでIgnoreが指定できる()
         {
             var archiver = new DefaultZipArchiver(archiveLog);
-            var archive = new DefaultZipArchiveProcessor(archiver, processorLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
             // No exclude hidden file
             await archive.ProcessAsync("Test", "**/*", "*/D/**", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))

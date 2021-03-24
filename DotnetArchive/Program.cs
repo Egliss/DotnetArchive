@@ -19,8 +19,8 @@ namespace DotnetArchive
                 })
                 .ConfigureServices(m =>
                 {
-                    m.AddSingleton<IZipArchiver, DefaultZipArchiver>();
-                    m.AddSingleton<IZipArchiveProcessor, DefaultZipArchiveProcessor>();
+                    m.AddSingleton<IArchiver, DefaultZipArchiver>();
+                    m.AddSingleton<IArchiveProcessor, DefaultArchiveProcessor>();
                 })
                 .RunConsoleAppFrameworkAsync<ArchiveCommand>(args);
         }

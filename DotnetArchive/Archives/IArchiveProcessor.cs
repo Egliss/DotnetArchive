@@ -2,7 +2,7 @@
 
 namespace DotnetArchive.Archives
 {
-    public interface IZipArchiveProcessor
+    public interface IArchiveProcessor
     {
         public void Process(
             string input, string pattern, string excludePattern, string output,

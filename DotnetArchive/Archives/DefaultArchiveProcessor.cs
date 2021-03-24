@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DotnetArchive.Archives
 {
-    public class DefaultZipArchiveProcessor : IZipArchiveProcessor
+    public class DefaultArchiveProcessor : IArchiveProcessor
     {
-        private readonly ILogger<DefaultZipArchiveProcessor> logger;
-        private readonly IZipArchiver archiver;
-        public DefaultZipArchiveProcessor(IZipArchiver archiver, ILogger<DefaultZipArchiveProcessor> logger)
+        private readonly ILogger<DefaultArchiveProcessor> logger;
+        private readonly IArchiver archiver;
+        public DefaultArchiveProcessor(IArchiver archiver, ILogger<DefaultArchiveProcessor> logger)
         {
             this.logger = logger;
             this.archiver = archiver;
@@ -20,7 +20,7 @@ namespace DotnetArchive.Archives
             bool excludeHidden, bool ignoreCase, bool quiet)
         {
             var files = ValidateAndGlob(input, pattern, excludePattern, output, excludeHidden, ignoreCase);
-            var file = this.archiver.Zip(input, files, this.logger, quiet);
+            var file = this.archiver.Archive(input, files, this.logger, quiet);
 
             File.Move(file.fullFilePath, output);
             file.allowNotFound = true;
@@ -31,7 +31,7 @@ namespace DotnetArchive.Archives
             bool excludeHidden, bool ignoreCase, bool quiet)
         {
             var files = ValidateAndGlob(input, pattern, excludePattern, output, excludeHidden, ignoreCase);
-            var file = await this.archiver.ZipAsync(input, files, this.logger, quiet);
+            var file = await this.archiver.ArchiveAsync(input, files, this.logger, quiet);
 
             File.Move(file.fullFilePath, output);
             file.allowNotFound = true;
