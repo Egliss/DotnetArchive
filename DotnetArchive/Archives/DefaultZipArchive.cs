@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Threading;
 using System.Threading.Tasks;
 using ZLogger;
 
@@ -46,7 +47,7 @@ namespace DotnetArchive.Archives
 
             return temporaryFile;
         }
-        public Task<DisposableFile> ArchiveAsync(string inputRootPath, IEnumerable<string> files, ILogger logger, bool quiet)
+        public Task<DisposableFile> ArchiveAsync(string inputRootPath, IEnumerable<string> files, ILogger logger, bool quiet, CancellationToken token = default)
         {
             logger.LogWarning("ZipAsync() not implemented. use syncrhonized Zip()");
 
@@ -58,7 +59,7 @@ namespace DotnetArchive.Archives
             throw new NotImplementedException();
         }
 
-        public Task UnArchiveAsync(string archiveFilePath, string outputDirectory, ILogger logger, bool quiet)
+        public Task UnArchiveAsync(string archiveFilePath, string outputDirectory, ILogger logger, bool quiet, CancellationToken token = default)
         {
             throw new NotImplementedException();
         }
