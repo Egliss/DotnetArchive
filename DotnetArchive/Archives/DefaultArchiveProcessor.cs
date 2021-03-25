@@ -33,7 +33,7 @@ namespace DotnetArchive.Archives
             bool excludeHidden, bool ignoreCase, bool quiet, CancellationToken token = default)
         {
             var files = ValidateAndGlob(input, pattern, excludePattern, output, excludeHidden, ignoreCase);
-            var file = await this.archiver.ArchiveAsync(input, files, this.logger, quiet);
+            var file = await this.archiver.ArchiveAsync(input, files, this.logger, quiet, token);
 
             File.Move(file.fullFilePath, output);
             file.allowNotFound = true;
