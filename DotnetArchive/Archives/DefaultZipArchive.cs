@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,12 +56,42 @@ namespace DotnetArchive.Archives
 
         public void UnArchive(string archiveFilePath, string outputDirectory, bool isOverwrite, ILogger logger, bool quiet)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(archiveFilePath))
+                throw new ArgumentException(nameof(archiveFilePath));
+            if(File.Exists(archiveFilePath) == false)
+                throw new DirectoryNotFoundException(archiveFilePath);
+            if(string.IsNullOrEmpty(outputDirectory))
+                throw new ArgumentException(nameof(outputDirectory));
+
+            var defaultLogLevel = quiet ? LogLevel.Debug : LogLevel.Information;
+            long processedCount = 0;
+            using(var zip = ZipFile.OpenRead(archiveFilePath))
+            {
+                processedCount = zip.Entries.Count;
+            }
+            ZipFile.ExtractToDirectory(archiveFilePath, outputDirectory, isOverwrite);
+            this.logger.ZLog(defaultLogLevel, "All file extracted.");
+            this.logger.ZLog(defaultLogLevel, "Processed: {0}", processedCount);
         }
 
         public async Task UnArchiveAsync(string archiveFilePath, string outputDirectory, bool isOverwrite, ILogger logger, bool quiet, CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            if(string.IsNullOrEmpty(archiveFilePath))
+                throw new ArgumentException(nameof(archiveFilePath));
+            if(File.Exists(archiveFilePath) == false)
+                throw new DirectoryNotFoundException(archiveFilePath);
+            if(string.IsNullOrEmpty(outputDirectory))
+                throw new ArgumentException(nameof(outputDirectory));
+
+            var defaultLogLevel = quiet ? LogLevel.Debug : LogLevel.Information;
+            long processedCount = 0;
+            using(var zip = ZipFile.OpenRead(archiveFilePath))
+            {
+                processedCount = zip.Entries.Count;
+            }
+            await Task.Run(() => ZipFile.ExtractToDirectory(archiveFilePath, outputDirectory, isOverwrite));
+            this.logger.ZLog(defaultLogLevel, "All file extracted.");
+            this.logger.ZLog(defaultLogLevel, "Processed: {0}", processedCount);
         }
     }
 }

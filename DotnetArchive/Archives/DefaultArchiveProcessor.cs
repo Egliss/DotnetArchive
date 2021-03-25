@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,6 +38,16 @@ namespace DotnetArchive.Archives
             File.Move(file.fullFilePath, output);
             file.allowNotFound = true;
             file.Dispose();
+        }
+
+        public void UnArchive(string zipFile, string outputDirectory, bool isOverwrite, bool quiet)
+        {
+            this.archiver.UnArchive(zipFile, outputDirectory, isOverwrite, this.logger, quiet);
+        }
+
+        public async Task UnArchiveAsync(string zipFile, string outputDirectory, bool isOverwrite, bool quiet, CancellationToken token = default)
+        {
+            await this.archiver.UnArchiveAsync(zipFile, outputDirectory, isOverwrite, this.logger, quiet, token);
         }
 
         private static IEnumerable<string> ValidateAndGlob(string input, string pattern, string excludePattern, string output, bool excludeHidden, bool ignoreCase)
