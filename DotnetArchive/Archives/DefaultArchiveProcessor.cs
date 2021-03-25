@@ -16,7 +16,7 @@ namespace DotnetArchive.Archives
             this.archiver = archiver;
         }
 
-        public void Process(string input, string pattern, string excludePattern, string output,
+        public void Archive(string input, string pattern, string excludePattern, string output,
             bool excludeHidden, bool ignoreCase, bool quiet)
         {
             var files = ValidateAndGlob(input, pattern, excludePattern, output, excludeHidden, ignoreCase);
@@ -27,7 +27,7 @@ namespace DotnetArchive.Archives
             file.Dispose();
         }
 
-        public async Task ProcessAsync(string input, string pattern, string excludePattern, string output,
+        public async Task ArchiveAsync(string input, string pattern, string excludePattern, string output,
             bool excludeHidden, bool ignoreCase, bool quiet)
         {
             var files = ValidateAndGlob(input, pattern, excludePattern, output, excludeHidden, ignoreCase);

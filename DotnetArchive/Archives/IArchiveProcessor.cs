@@ -4,11 +4,11 @@ namespace DotnetArchive.Archives
 {
     public interface IArchiveProcessor
     {
-        public void Process(
+        public void Archive(
             string input, string pattern, string excludePattern, string output,
             bool excludeHidden, bool ignoreCase, bool quiet);
 
-        public Task ProcessAsync(
+        public Task ArchiveAsync(
             string input, string pattern, string excludePattern, string output,
             bool excludeHidden, bool ignoreCase, bool quiet);
     }

@@ -58,7 +58,7 @@ namespace DotnetArchive_Test
             var archive = new DefaultArchiveProcessor(archiver, processorLog);
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await archive.ProcessAsync("", "", "", "output.zip", false, false, false));
+                async () => await archive.ArchiveAsync("", "", "", "output.zip", false, false, false));
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace DotnetArchive_Test
             var archive = new DefaultArchiveProcessor(archiver, processorLog);
 
             await Assert.ThrowsExceptionAsync<ArgumentException>(
-                async () => await archive.ProcessAsync("./", "*", "", "", false, false, false));
+                async () => await archive.ArchiveAsync("./", "*", "", "", false, false, false));
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace DotnetArchive_Test
             var archiver = new DefaultZipArchiver(archiveLog);
             var archive = new DefaultArchiveProcessor(archiver, processorLog);
 
-            await archive.ProcessAsync("./", "*", "", "output.zip", false, false, false);
+            await archive.ArchiveAsync("./", "*", "", "output.zip", false, false, false);
 
             Assert.IsTrue(File.Exists("output.zip"));
         }
@@ -88,7 +88,7 @@ namespace DotnetArchive_Test
             var archiver = new DefaultZipArchiver(archiveLog);
             var archive = new DefaultArchiveProcessor(archiver, processorLog);
 
-            await archive.ProcessAsync("Test", "**/*", "", "output.zip", true, false, false);
+            await archive.ArchiveAsync("Test", "**/*", "", "output.zip", true, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsTrue(zip.Entries.Count == 5, zip.Entries.Count.ToString());
@@ -101,14 +101,14 @@ namespace DotnetArchive_Test
             var archiver = new DefaultZipArchiver(archiveLog);
             var archive = new DefaultArchiveProcessor(archiver, processorLog);
             // No exclude hidden file
-            await archive.ProcessAsync("Test", "**/*", "", "output.zip", false, false, false);
+            await archive.ArchiveAsync("Test", "**/*", "", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsTrue(zip.Entries.Any(m => m.Name == ".Hide_A.txt"));
             }
 
             // Exclude hidden file
-            await archive.ProcessAsync("Test", "**/*", "", "output.zip", true, false, false);
+            await archive.ArchiveAsync("Test", "**/*", "", "output.zip", true, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsFalse(zip.Entries.Any(m => m.Name == ".Hide_A.txt"));
@@ -121,14 +121,14 @@ namespace DotnetArchive_Test
             var archiver = new DefaultZipArchiver(archiveLog);
             var archive = new DefaultArchiveProcessor(archiver, processorLog);
             // No exclude hidden file
-            await archive.ProcessAsync("Test", "**/c*", "", "output.zip", false, false, false);
+            await archive.ArchiveAsync("Test", "**/c*", "", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsTrue(zip.Entries.Count == 1);
             }
 
             // Exclude hidden file
-            await archive.ProcessAsync("Test", "**/c*", "", "output.zip", true, true, false);
+            await archive.ArchiveAsync("Test", "**/c*", "", "output.zip", true, true, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsTrue(zip.Entries.Count == 2);
@@ -141,7 +141,7 @@ namespace DotnetArchive_Test
             var archiver = new DefaultZipArchiver(archiveLog);
             var archive = new DefaultArchiveProcessor(archiver, processorLog);
             // No exclude hidden file
-            await archive.ProcessAsync("Test", "**/*", "*/D/**", "output.zip", false, false, false);
+            await archive.ArchiveAsync("Test", "**/*", "*/D/**", "output.zip", false, false, false);
             using(var zip = ZipFile.OpenRead("output.zip"))
             {
                 Assert.IsTrue(zip.Entries.Count == 4);

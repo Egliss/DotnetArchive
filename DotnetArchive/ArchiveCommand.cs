@@ -39,7 +39,7 @@ namespace DotnetArchive
                 this.logger.LogInformation(ZString.Format("-q: {0}", quiet));
             }
 
-            await this.processor.ProcessAsync(input, pattern, excludePattern, output, excludeHidden, ignoreCase, quiet);
+            await this.processor.ArchiveAsync(input, pattern, excludePattern, output, excludeHidden, ignoreCase, quiet);
         }
     }
 }
