@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DotnetArchive.Archives
 {
@@ -10,6 +11,6 @@ namespace DotnetArchive.Archives
 
         public Task ArchiveAsync(
             string input, string pattern, string excludePattern, string output,
-            bool excludeHidden, bool ignoreCase, bool quiet);
+            bool excludeHidden, bool ignoreCase, bool quiet, CancellationToken token = default);
     }
 }

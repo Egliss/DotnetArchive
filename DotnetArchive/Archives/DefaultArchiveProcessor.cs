@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotnetArchive.Archives
@@ -10,6 +11,7 @@ namespace DotnetArchive.Archives
     {
         private readonly ILogger<DefaultArchiveProcessor> logger;
         private readonly IArchiver archiver;
+
         public DefaultArchiveProcessor(IArchiver archiver, ILogger<DefaultArchiveProcessor> logger)
         {
             this.logger = logger;
@@ -28,7 +30,7 @@ namespace DotnetArchive.Archives
         }
 
         public async Task ArchiveAsync(string input, string pattern, string excludePattern, string output,
-            bool excludeHidden, bool ignoreCase, bool quiet)
+            bool excludeHidden, bool ignoreCase, bool quiet, CancellationToken token = default)
         {
             var files = ValidateAndGlob(input, pattern, excludePattern, output, excludeHidden, ignoreCase);
             var file = await this.archiver.ArchiveAsync(input, files, this.logger, quiet);
