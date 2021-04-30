@@ -20,10 +20,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConsoleAppFramework" Version="3.2.0" />
+    <PackageReference Include="ConsoleAppFramework" Version="3.3.0" />
     <PackageReference Include="Glob" Version="1.1.8" />
-    <PackageReference Include="ZLogger" Version="1.4.1" />
-    <PackageReference Include="ZString" Version="2.3.1" />
+    <PackageReference Include="ZLogger" Version="1.5.0" />
+    <PackageReference Include="ZString" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup>
