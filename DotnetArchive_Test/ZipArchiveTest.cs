@@ -147,5 +147,16 @@ namespace DotnetArchive_Test
                 Assert.IsTrue(zip.Entries.Count == 4);
             }
         }
+
+        [TestMethod]
+        public async Task _Zipを解凍できる()
+        {
+            var archiver = new DefaultZipArchiver(archiveLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
+
+            await archive.ArchiveAsync("Test", "**/*", "", "output.zip", false, false, false);
+            await archiver.UnArchiveAsync("output.zip", "Test/Output/", false, null, false);
+
+        }
     }
 }
