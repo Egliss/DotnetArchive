@@ -25,6 +25,7 @@ namespace DotnetArchive.Archives
             var file = this.archiver.Archive(input, files, this.logger, quiet);
 
             File.Move(file.fullFilePath, output);
+            File.SetAttributes(output, FileAttributes.Normal);
             file.allowNotFound = true;
             file.Dispose();
         }
@@ -36,6 +37,7 @@ namespace DotnetArchive.Archives
             var file = await this.archiver.ArchiveAsync(input, files, this.logger, quiet, token);
 
             File.Move(file.fullFilePath, output);
+            File.SetAttributes(output, FileAttributes.Normal);
             file.allowNotFound = true;
             file.Dispose();
         }
