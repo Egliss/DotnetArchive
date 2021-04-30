@@ -158,5 +158,15 @@ namespace DotnetArchive_Test
             await archiver.UnArchiveAsync("output.zip", "Test/Output/", false, null, false);
 
         }
+
+        [TestMethod]
+        public async Task _FileAttributeが適切()
+        {
+            var archiver = new DefaultZipArchiver(archiveLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
+
+            await archive.ArchiveAsync("Test", "**/*", "", "output.zip", false, false, false);
+            Assert.AreEqual(File.GetAttributes("output.zip"), FileAttributes.Normal);
+        }
     }
 }
