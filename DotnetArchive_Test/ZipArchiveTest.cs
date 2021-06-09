@@ -1,6 +1,7 @@
 using DotnetArchive.Archives;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Mono.Unix;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -26,6 +27,7 @@ namespace DotnetArchive_Test
             using(var s1 = File.Create("Test/.Hide_A.txt")) { }
             File.SetAttributes("Test/.Hide_A.txt", FileAttributes.Hidden | FileAttributes.Normal);
 
+            Directory.CreateDirectory("Test/Permissions");
             // SingleFile
             Directory.CreateDirectory("Test/A");
             using var s2 = File.CreateText("Test/A/A.txt");
@@ -167,6 +169,31 @@ namespace DotnetArchive_Test
 
             await archive.ArchiveAsync("Test", "**/*", "", "output.zip", false, false, false);
             Assert.AreEqual(File.GetAttributes("output.zip"), FileAttributes.Normal);
+        }
+
+        [TestMethod]
+        public async Task _Permissionが正しく設定されている()
+        {
+            var archiver = new DefaultZipArchiver(archiveLog);
+            var archive = new DefaultArchiveProcessor(archiver, processorLog);
+
+            await archive.ArchiveAsync("Test", "**/*", "", "output.zip", false, false, false);
+            await archive.UnArchiveAsync("output.zip", "Test/Permissions", true, true);
+            if(Environment.OSVersion.Platform != PlatformID.Unix)
+            {
+                return;
+            }
+            if(UnixFileInfo.TryGetFileSystemEntry("Test/Permissions/A/A.txt", out var entry))
+            {
+                var previous = UnixFileInfo.TryGetFileSystemEntry("Test/A/A.txt", out var previousEntry);
+                var previousPermission = previousEntry.FileAccessPermissions;
+                var actualPermission = entry.FileAccessPermissions;
+                Assert.AreEqual(previousPermission, actualPermission, $"Prev: {previousPermission}, Actual: {actualPermission}");
+            }
+            else
+            {
+                Assert.Fail("Test/Permissions/A/A.txt not found");
+            }
         }
     }
 }
