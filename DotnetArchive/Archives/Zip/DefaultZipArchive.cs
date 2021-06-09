@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using Mono.Unix;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +37,17 @@ namespace DotnetArchive.Archives
                 foreach(var item in files)
                 {
                     var file = Path.Combine(inputRootPath, item);
-                    zip.CreateEntryFromFile(file, item);
+                    var entry = zip.CreateEntryFromFile(file, item);
+                    if(Environment.OSVersion.Platform == PlatformID.Unix)
+                    {
+                        // TODO endian?
+                        var permission = (int)UnixFileInfo.GetFileSystemEntry(file).FileAccessPermissions << 16;
+                        entry.ExternalAttributes = permission;
+                    }
+                    else
+                    {
+                        entry.ExternalAttributes = entry.ExternalAttributes = entry.ExternalAttributes | (Convert.ToInt32("664", 8) << 16); ;
+                    }
                     processedCount++;
                     this.logger.ZLog(defaultLogLevel, item);
                 }
